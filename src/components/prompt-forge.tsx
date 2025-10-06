@@ -6,13 +6,14 @@ import type { PromptHistoryItem, LlmModel } from "@/lib/types";
 import { useLocalStorage } from "@/lib/hooks/use-local-storage";
 import { optimizePromptAction, collectFeedbackAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset, useSidebar } from "@/components/ui/sidebar";
 import { AppHeader } from "@/components/app-header";
 import { HistorySidebar } from "@/components/history-sidebar";
 import { PromptForm } from "@/components/prompt-form";
 import { OutputDisplay } from "@/components/output-display";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "./ui/button";
+import { PanelLeft } from "lucide-react";
 
 export function PromptForge() {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +24,8 @@ export function PromptForge() {
 
   const [history, setHistory] = useLocalStorage<PromptHistoryItem[]>("prompt-history", []);
   const { toast } = useToast();
+  const { toggleSidebar } = useSidebar();
+
 
   const handleOptimize = async (values: { prompt: string; targetLLM: LlmModel }) => {
     setIsLoading(true);
@@ -114,11 +117,10 @@ export function PromptForge() {
             <main className="flex flex-col gap-8 w-full max-w-3xl mx-auto">
               {history.length > 0 && (
                 <div className="hidden md:flex justify-end -mb-4">
-                  <SidebarTrigger asChild>
-                    <Button variant="ghost">
-                      <span>Toggle History</span>
+                    <Button variant="ghost" onClick={toggleSidebar}>
+                      <PanelLeft className="mr-2 h-4 w-4" />
+                      Toggle History
                     </Button>
-                  </SidebarTrigger>
                 </div>
               )}
               <PromptForm
