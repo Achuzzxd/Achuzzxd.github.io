@@ -6,7 +6,7 @@ import type { PromptHistoryItem, LlmModel } from "@/lib/types";
 import { useLocalStorage } from "@/lib/hooks/use-local-storage";
 import { optimizePromptAction, collectFeedbackAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
-import { SidebarProvider, SidebarInset, useSidebar } from "@/components/ui/sidebar";
+import { SidebarInset, useSidebar } from "@/components/ui/sidebar";
 import { AppHeader } from "@/components/app-header";
 import { HistorySidebar } from "@/components/history-sidebar";
 import { PromptForm } from "@/components/prompt-form";
@@ -104,45 +104,43 @@ export function PromptForge() {
   };
 
   return (
-    <SidebarProvider>
-      <div className="flex flex-col min-h-screen">
-        <AppHeader hasHistory={history.length > 0}/>
-        <div className="flex flex-1">
-          <HistorySidebar
-            history={history}
-            onSelect={handleLoadFromHistory}
-            onClear={handleClearHistory}
-          />
-          <SidebarInset className="p-4 md:p-8">
-            <main className="flex flex-col gap-8 w-full max-w-3xl mx-auto">
-              {history.length > 0 && (
-                <div className="hidden md:flex justify-end -mb-4">
-                    <Button variant="ghost" onClick={toggleSidebar}>
-                      <PanelLeft className="mr-2 h-4 w-4" />
-                      Toggle History
-                    </Button>
-                </div>
-              )}
-              <PromptForm
-                key={formKey}
-                onSubmit={handleOptimize}
-                isLoading={isLoading}
-                initialData={currentPrompt || undefined}
+    <div className="flex flex-col min-h-screen">
+      <AppHeader hasHistory={history.length > 0}/>
+      <div className="flex flex-1">
+        <HistorySidebar
+          history={history}
+          onSelect={handleLoadFromHistory}
+          onClear={handleClearHistory}
+        />
+        <SidebarInset className="p-4 md:p-8">
+          <main className="flex flex-col gap-8 w-full max-w-3xl mx-auto">
+            {history.length > 0 && (
+              <div className="hidden md:flex justify-end -mb-4">
+                  <Button variant="ghost" onClick={toggleSidebar}>
+                    <PanelLeft className="mr-2 h-4 w-4" />
+                    Toggle History
+                  </Button>
+              </div>
+            )}
+            <PromptForm
+              key={formKey}
+              onSubmit={handleOptimize}
+              isLoading={isLoading}
+              initialData={currentPrompt || undefined}
+            />
+            {isLoading && <LoadingSkeleton />}
+            {result && currentPrompt && (
+              <OutputDisplay
+                originalPrompt={currentPrompt.prompt}
+                targetLLM={currentPrompt.targetLLM}
+                result={result}
+                onFeedback={handleFeedback}
               />
-              {isLoading && <LoadingSkeleton />}
-              {result && currentPrompt && (
-                <OutputDisplay
-                  originalPrompt={currentPrompt.prompt}
-                  targetLLM={currentPrompt.targetLLM}
-                  result={result}
-                  onFeedback={handleFeedback}
-                />
-              )}
-            </main>
-          </SidebarInset>
-        </div>
+            )}
+          </main>
+        </SidebarInset>
       </div>
-    </SidebarProvider>
+    </div>
   );
 }
 
