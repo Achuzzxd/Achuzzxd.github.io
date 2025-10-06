@@ -115,7 +115,9 @@ export function PromptForge() {
               {history.length > 0 && (
                 <div className="hidden md:flex justify-end -mb-4">
                   <SidebarTrigger asChild>
-                    <Button variant="ghost">Toggle History</Button>
+                    <Button variant="ghost">
+                      <span>Toggle History</span>
+                    </Button>
                   </SidebarTrigger>
                 </div>
               )}
