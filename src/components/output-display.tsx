@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -41,7 +42,8 @@ export function OutputDisplay({
   const [clarityScore, setClarityScore] = useState(80);
   const [specificityScore, setSpecificityScore] = useState(80);
   const [feedbackComments, setFeedbackComments] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
+  const [copiedJson, setCopiedJson] = useState(false);
   const { toast } = useToast();
 
   const handleFeedbackSubmit = async () => {
@@ -56,11 +58,18 @@ export function OutputDisplay({
     setIsSubmitting(false);
   };
 
-  const handleCopy = () => {
+  const handleCopyPrompt = () => {
     navigator.clipboard.writeText(result.optimized_prompt);
-    setCopied(true);
+    setCopiedPrompt(true);
     toast({ title: "Copied to clipboard!" });
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopiedPrompt(false), 2000);
+  };
+  
+  const handleCopyJson = () => {
+    navigator.clipboard.writeText(JSON.stringify(result, null, 2));
+    setCopiedJson(true);
+    toast({ title: "Copied JSON to clipboard!" });
+    setTimeout(() => setCopiedJson(false), 2000);
   };
 
   return (
@@ -76,13 +85,25 @@ export function OutputDisplay({
           <div>
             <div className="flex justify-between items-center mb-2">
                 <Label className="text-sm font-semibold">Optimized Prompt</Label>
-                <Button variant="ghost" size="sm" onClick={handleCopy}>
-                    {copied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+                <Button variant="ghost" size="sm" onClick={handleCopyPrompt}>
+                    {copiedPrompt ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
                     Copy
                 </Button>
             </div>
             <pre className="w-full rounded-md bg-muted p-4 font-code text-sm overflow-x-auto">
               <code>{result.optimized_prompt}</code>
+            </pre>
+          </div>
+           <div>
+            <div className="flex justify-between items-center mb-2">
+                <Label className="text-sm font-semibold">JSON Prompting</Label>
+                <Button variant="ghost" size="sm" onClick={handleCopyJson}>
+                    {copiedJson ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+                    Copy JSON
+                </Button>
+            </div>
+            <pre className="w-full rounded-md bg-muted p-4 font-code text-sm overflow-x-auto">
+              <code>{JSON.stringify(result, null, 2)}</code>
             </pre>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
