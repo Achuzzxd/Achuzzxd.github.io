@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ThumbsUp, ThumbsDown, Send, Loader2 } from "lucide-react";
+import { ThumbsUp, Send, Loader2, Copy, Check } from "lucide-react";
 import type { OptimizePromptForLLMOutput } from "@/ai/flows/optimize-prompt-for-llm";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,10 +12,10 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
+import { useToast } from "@/hooks/use-toast";
 
 type OutputDisplayProps = {
   originalPrompt: string;
@@ -41,6 +41,8 @@ export function OutputDisplay({
   const [clarityScore, setClarityScore] = useState(80);
   const [specificityScore, setSpecificityScore] = useState(80);
   const [feedbackComments, setFeedbackComments] = useState("");
+  const [copied, setCopied] = useState(false);
+  const { toast } = useToast();
 
   const handleFeedbackSubmit = async () => {
     setIsSubmitting(true);
@@ -54,6 +56,13 @@ export function OutputDisplay({
     setIsSubmitting(false);
   };
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(result.optimized_prompt);
+    setCopied(true);
+    toast({ title: "Copied to clipboard!" });
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <div className="space-y-8">
       <Card className="shadow-lg animate-in fade-in-50 slide-in-from-bottom-5 duration-500">
@@ -65,25 +74,41 @@ export function OutputDisplay({
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <Label className="text-sm font-semibold">Optimized Prompt</Label>
-            <pre className="mt-2 w-full rounded-md bg-muted p-4 font-code text-sm overflow-x-auto">
-              <code>{result.optimizedPrompt}</code>
+            <div className="flex justify-between items-center mb-2">
+                <Label className="text-sm font-semibold">Optimized Prompt</Label>
+                <Button variant="ghost" size="sm" onClick={handleCopy}>
+                    {copied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
+                    Copy
+                </Button>
+            </div>
+            <pre className="w-full rounded-md bg-muted p-4 font-code text-sm overflow-x-auto">
+              <code>{result.optimized_prompt}</code>
             </pre>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <Label>Quality Score: {result.qualityScore}</Label>
-              <Progress value={result.qualityScore} className="mt-2" />
+              <Label>Target Model</Label>
+              <p className="mt-1 text-sm font-medium text-foreground bg-muted px-3 py-2 rounded-md">{result.target_model}</p>
             </div>
             <div>
-              <Label>Confidence Score: {result.confidenceScore}</Label>
-              <Progress value={result.confidenceScore} className="mt-2" />
+              <Label>Temperature</Label>
+              <p className="mt-1 text-sm font-medium text-foreground bg-muted px-3 py-2 rounded-md">{result.temperature}</p>
+            </div>
+             <div>
+              <Label>Max Tokens</Label>
+              <p className="mt-1 text-sm font-medium text-foreground bg-muted px-3 py-2 rounded-md">{result.max_output_tokens}</p>
             </div>
           </div>
+           <div>
+            <Label className="text-sm font-semibold">Suggested Output</Label>
+            <p className="mt-2 text-sm text-muted-foreground p-4 bg-muted rounded-md">
+              {result.suggested_output}
+            </p>
+          </div>
           <div>
-            <Label className="text-sm font-semibold">Quality Details</Label>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {result.qualityScoreDetails}
+            <Label className="text-sm font-semibold">Notes</Label>
+            <p className="mt-2 text-sm text-muted-foreground p-4 bg-muted rounded-md">
+              {result.notes}
             </p>
           </div>
         </CardContent>
@@ -93,7 +118,7 @@ export function OutputDisplay({
         <CardHeader>
           <CardTitle>Provide Feedback</CardTitle>
           <CardDescription>
-            Help us improve by rating the optimized prompt.
+            Help us improve by rating the original optimization.
           </CardDescription>
         </CardHeader>
         {feedbackSubmitted ? (
@@ -107,7 +132,7 @@ export function OutputDisplay({
           <>
             <CardContent className="space-y-6">
               <div className="space-y-4">
-                <Label htmlFor="quality">Quality: {qualityScore}</Label>
+                <Label htmlFor="quality">Quality Score</Label>
                 <Slider
                   id="quality"
                   min={0}
@@ -119,7 +144,7 @@ export function OutputDisplay({
                 />
               </div>
               <div className="space-y-4">
-                <Label htmlFor="clarity">Clarity: {clarityScore}</Label>
+                <Label htmlFor="clarity">Clarity Score</Label>
                 <Slider
                   id="clarity"
                   min={0}
@@ -131,7 +156,7 @@ export function OutputDisplay({
                 />
               </div>
               <div className="space-y-4">
-                <Label htmlFor="specificity">Specificity: {specificityScore}</Label>
+                <Label htmlFor="specificity">Specificity Score</Label>
                 <Slider
                   id="specificity"
                   min={0}

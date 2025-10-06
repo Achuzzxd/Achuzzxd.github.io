@@ -69,7 +69,7 @@ export function PromptForge() {
     const response = await collectFeedbackAction({
       ...feedback,
       originalPrompt: currentPrompt.prompt,
-      optimizedPrompt: result.optimizedPrompt,
+      optimizedPrompt: result.optimized_prompt,
       targetLlm: currentPrompt.targetLLM,
     });
 
@@ -105,7 +105,7 @@ export function PromptForge() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <AppHeader hasHistory={history.length > 0}/>
+      <AppHeader />
       <div className="flex flex-1">
         <HistorySidebar
           history={history}

@@ -17,10 +17,12 @@ const OptimizePromptForLLMInputSchema = z.object({
 export type OptimizePromptForLLMInput = z.infer<typeof OptimizePromptForLLMInputSchema>;
 
 const OptimizePromptForLLMOutputSchema = z.object({
-  optimizedPrompt: z.string().describe('The optimized prompt tailored for the specified LLM.'),
-  qualityScore: z.number().describe('A score indicating the quality of the optimized prompt.'),
-  qualityScoreDetails: z.string().describe('Details explaining the quality score.'),
-  confidenceScore: z.number().describe('A score indicating the confidence level in the optimized prompt.'),
+  target_model: z.string().describe('The target model for the optimized prompt.'),
+  temperature: z.number().describe('The recommended temperature for the model.'),
+  max_output_tokens: z.number().describe('The recommended max output tokens for the model.'),
+  optimized_prompt: z.string().describe('The optimized prompt tailored for the specified LLM.'),
+  suggested_output: z.string().describe('A suggestion for what the output of the prompt should look like.'),
+  notes: z.string().describe('Additional notes or instructions for using the prompt.'),
 });
 export type OptimizePromptForLLMOutput = z.infer<typeof OptimizePromptForLLMOutputSchema>;
 
@@ -32,11 +34,16 @@ const prompt = ai.definePrompt({
   name: 'optimizePromptForLLMPrompt',
   input: {schema: OptimizePromptForLLMInputSchema},
   output: {schema: OptimizePromptForLLMOutputSchema},
-  prompt: `You are an expert prompt engineer. Your goal is to optimize the given user prompt for the specified LLM to improve its quality and increase the likelihood of a desirable response. LLM to optimize for: {{{targetLLM}}}.\n\nOriginal Prompt: {{{prompt}}}\n\nOptimize the prompt, then provide a quality score (0-100), quality score details and a confidence score (0-100) for the optimized prompt.\n\nYour output MUST be a JSON object structured as follows:\n{
-  "optimizedPrompt": "[The optimized prompt]",
-  "qualityScore": [Quality score for the optimized prompt (0-100)],
-  "qualityScoreDetails": "[Details explaining the quality score]",
-  "confidenceScore": [Your confidence score that prompt is optimized for the target LLM (0-100)]
+  prompt: `You are an expert prompt engineer. Your goal is to optimize the given user prompt for the specified LLM to improve its quality and increase the likelihood of a desirable response. LLM to optimize for: {{{targetLLM}}}.\n\nOriginal Prompt: {{{prompt}}}\n\nOptimize the prompt and provide recommended model parameters.
+
+Your output MUST be a JSON object structured as follows:
+{
+  "target_model": "{{{targetLLM}}}",
+  "temperature": [Recommended temperature for the model (e.g., 0.7)],
+  "max_output_tokens": [Recommended max output tokens (e.g., 1200)],
+  "optimized_prompt": "[The optimized prompt]",
+  "suggested_output": "[A description of the ideal output from this prompt]",
+  "notes": "[Additional notes or instructions for using the prompt]"
 }`,
 });
 
