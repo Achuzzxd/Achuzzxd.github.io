@@ -1,0 +1,172 @@
+"use client";
+
+import { useState } from "react";
+import { ThumbsUp, ThumbsDown, Send, Loader2 } from "lucide-react";
+import type { OptimizePromptForLLMOutput } from "@/ai/flows/optimize-prompt-for-llm";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Slider } from "@/components/ui/slider";
+
+type OutputDisplayProps = {
+  originalPrompt: string;
+  targetLLM: string;
+  result: OptimizePromptForLLMOutput;
+  onFeedback: (feedback: {
+    qualityScore: number;
+    clarityScore: number;
+    specificityScore: number;
+    feedbackComments?: string;
+  }) => Promise<void>;
+};
+
+export function OutputDisplay({
+  originalPrompt,
+  targetLLM,
+  result,
+  onFeedback,
+}: OutputDisplayProps) {
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [qualityScore, setQualityScore] = useState(80);
+  const [clarityScore, setClarityScore] = useState(80);
+  const [specificityScore, setSpecificityScore] = useState(80);
+  const [feedbackComments, setFeedbackComments] = useState("");
+
+  const handleFeedbackSubmit = async () => {
+    setIsSubmitting(true);
+    await onFeedback({
+      qualityScore,
+      clarityScore,
+      specificityScore,
+      feedbackComments,
+    });
+    setFeedbackSubmitted(true);
+    setIsSubmitting(false);
+  };
+
+  return (
+    <div className="space-y-8">
+      <Card className="shadow-lg animate-in fade-in-50 slide-in-from-bottom-5 duration-500">
+        <CardHeader>
+          <CardTitle className="font-headline text-2xl">Optimized Result</CardTitle>
+          <CardDescription>
+            Here is the prompt optimized for {targetLLM}.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div>
+            <Label className="text-sm font-semibold">Optimized Prompt</Label>
+            <pre className="mt-2 w-full rounded-md bg-muted p-4 font-code text-sm overflow-x-auto">
+              <code>{result.optimizedPrompt}</code>
+            </pre>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <Label>Quality Score: {result.qualityScore}</Label>
+              <Progress value={result.qualityScore} className="mt-2" />
+            </div>
+            <div>
+              <Label>Confidence Score: {result.confidenceScore}</Label>
+              <Progress value={result.confidenceScore} className="mt-2" />
+            </div>
+          </div>
+          <div>
+            <Label className="text-sm font-semibold">Quality Details</Label>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {result.qualityScoreDetails}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="shadow-lg animate-in fade-in-50 slide-in-from-bottom-5 duration-700">
+        <CardHeader>
+          <CardTitle>Provide Feedback</CardTitle>
+          <CardDescription>
+            Help us improve by rating the optimized prompt.
+          </CardDescription>
+        </CardHeader>
+        {feedbackSubmitted ? (
+          <CardContent>
+            <div className="flex flex-col items-center justify-center p-8 bg-muted rounded-lg">
+                <ThumbsUp className="h-12 w-12 text-green-500 mb-4" />
+                <p className="text-lg font-medium">Thank you for your feedback!</p>
+            </div>
+          </CardContent>
+        ) : (
+          <>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <Label htmlFor="quality">Quality: {qualityScore}</Label>
+                <Slider
+                  id="quality"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={[qualityScore]}
+                  onValueChange={(v) => setQualityScore(v[0])}
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div className="space-y-4">
+                <Label htmlFor="clarity">Clarity: {clarityScore}</Label>
+                <Slider
+                  id="clarity"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={[clarityScore]}
+                  onValueChange={(v) => setClarityScore(v[0])}
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div className="space-y-4">
+                <Label htmlFor="specificity">Specificity: {specificityScore}</Label>
+                <Slider
+                  id="specificity"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={[specificityScore]}
+                  onValueChange={(v) => setSpecificityScore(v[0])}
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div>
+                <Label htmlFor="comments">Additional Comments (Optional)</Label>
+                <Textarea
+                  id="comments"
+                  placeholder="What did you like or dislike?"
+                  value={feedbackComments}
+                  onChange={(e) => setFeedbackComments(e.target.value)}
+                  disabled={isSubmitting}
+                  className="mt-2"
+                />
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button onClick={handleFeedbackSubmit} disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="mr-2 h-4 w-4" />
+                )}
+                Submit Feedback
+              </Button>
+            </CardFooter>
+          </>
+        )}
+      </Card>
+    </div>
+  );
+}
