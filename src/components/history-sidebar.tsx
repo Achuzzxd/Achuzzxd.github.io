@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useEffect, useState } from "react";
 import type { PromptHistoryItem } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +30,13 @@ export function HistorySidebar({
   onClear,
 }: HistorySidebarProps) {
   const { setOpenMobile } = useSidebar();
-  if (history.length === 0) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient || history.length === 0) {
     return null;
   }
 
