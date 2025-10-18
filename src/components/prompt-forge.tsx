@@ -118,7 +118,7 @@ export function PromptForge() {
           onSelect={handleLoadFromHistory}
           onClear={handleClearHistory}
         />
-        <SidebarInset className="flex flex-col items-center p-4 md:p-8">
+        <SidebarInset className="flex flex-col items-center justify-start p-4 md:p-8">
           <main className="flex flex-col gap-8 w-full max-w-3xl">
             {isClient && history.length > 0 && (
               <div className="hidden md:flex justify-end -mb-4">
