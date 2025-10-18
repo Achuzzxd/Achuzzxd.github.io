@@ -2,17 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Sparkles, History, Settings } from "lucide-react";
+import { Home, Sparkles, History } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
 
 const navLinks = [
   { href: "/home", label: "Home", icon: Home },
   { href: "/optimize", label: "Optimize", icon: Sparkles },
   { href: "/history", label: "History", icon: History },
-  { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 export function AppHeader() {
