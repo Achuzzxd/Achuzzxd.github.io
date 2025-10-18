@@ -118,31 +118,33 @@ export function PromptForge() {
           onSelect={handleLoadFromHistory}
           onClear={handleClearHistory}
         />
-        <SidebarInset className="flex flex-col items-center p-4 md:p-8">
-          <main className="flex flex-col gap-8 w-full max-w-3xl">
-            {isClient && history.length > 0 && (
-              <div className="hidden md:flex justify-end -mb-4">
-                  <Button variant="ghost" onClick={toggleSidebar}>
-                    <PanelLeft className="mr-2 h-4 w-4" />
-                    Toggle History
-                  </Button>
-              </div>
-            )}
-            <PromptForm
-              key={formKey}
-              onSubmit={handleOptimize}
-              isLoading={isLoading}
-              initialData={currentPrompt || undefined}
-            />
-            {isLoading && <LoadingSkeleton />}
-            {result && currentPrompt && (
-              <OutputDisplay
-                originalPrompt={currentPrompt.prompt}
-                targetLLM={currentPrompt.targetLLM}
-                result={result}
-                onFeedback={handleFeedback}
+        <SidebarInset className="flex-1 w-full p-4 md:p-8">
+          <main className="flex flex-col items-center w-full">
+            <div className="flex flex-col gap-8 w-full max-w-3xl">
+              {isClient && history.length > 0 && (
+                <div className="hidden md:flex justify-end -mb-4">
+                    <Button variant="ghost" onClick={toggleSidebar}>
+                      <PanelLeft className="mr-2 h-4 w-4" />
+                      Toggle History
+                    </Button>
+                </div>
+              )}
+              <PromptForm
+                key={formKey}
+                onSubmit={handleOptimize}
+                isLoading={isLoading}
+                initialData={currentPrompt || undefined}
               />
-            )}
+              {isLoading && <LoadingSkeleton />}
+              {result && currentPrompt && (
+                <OutputDisplay
+                  originalPrompt={currentPrompt.prompt}
+                  targetLLM={currentPrompt.targetLLM}
+                  result={result}
+                  onFeedback={handleFeedback}
+                />
+              )}
+            </div>
           </main>
         </SidebarInset>
       </div>
