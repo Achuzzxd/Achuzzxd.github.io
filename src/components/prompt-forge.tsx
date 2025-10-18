@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -7,31 +6,20 @@ import type { PromptHistoryItem, LlmModel } from "@/lib/types";
 import { useLocalStorage } from "@/lib/hooks/use-local-storage";
 import { optimizePromptAction, collectFeedbackAction } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
-import { SidebarInset, useSidebar } from "@/components/ui/sidebar";
-import { AppHeader } from "@/components/app-header";
-import { HistorySidebar } from "@/components/history-sidebar";
 import { PromptForm } from "@/components/prompt-form";
 import { OutputDisplay } from "@/components/output-display";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "./ui/button";
-import { PanelLeft } from "lucide-react";
 
-export function PromptForge() {
+export function PromptForge({ initialPrompt, initialLlm }: { initialPrompt?: string; initialLlm?: LlmModel }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<OptimizePromptForLLMOutput | null>(null);
-  const [currentPrompt, setCurrentPrompt] = useState<{ prompt: string; targetLLM: LlmModel } | null>(null);
-  const [formKey, setFormKey] = useState(Date.now());
-
+  const [currentPrompt, setCurrentPrompt] = useState<{ prompt: string; targetLLM: LlmModel } | null>(
+    initialPrompt && initialLlm ? { prompt: initialPrompt, targetLLM: initialLlm } : null
+  );
+  
   const [history, setHistory] = useLocalStorage<PromptHistoryItem[]>("prompt-history", []);
   const { toast } = useToast();
-  const { toggleSidebar } = useSidebar();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
 
   const handleOptimize = async (values: { prompt: string; targetLLM: LlmModel }) => {
     setIsLoading(true);
@@ -92,59 +80,25 @@ export function PromptForge() {
       });
     }
   };
-  
-  const handleLoadFromHistory = (item: PromptHistoryItem) => {
-    setCurrentPrompt({
-      prompt: item.originalPrompt,
-      targetLLM: item.targetLLM as LlmModel,
-    });
-    setResult(item.optimizationResult);
-    setFormKey(Date.now()); // Re-mounts the form with new initial data
-  };
-
-  const handleClearHistory = () => {
-    setHistory([]);
-    toast({
-      title: "History Cleared",
-    });
-  };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <AppHeader />
-      <div className="flex flex-1">
-        <HistorySidebar
-          history={history}
-          onSelect={handleLoadFromHistory}
-          onClear={handleClearHistory}
+    <div className="flex flex-col items-center w-full">
+      <div className="flex flex-col gap-8 w-full max-w-3xl">
+        <PromptForm
+          onSubmit={handleOptimize}
+          isLoading={isLoading}
+          initialData={currentPrompt || undefined}
         />
-        <SidebarInset className="flex flex-col items-center p-4 md:p-8">
-          <main className="flex flex-col gap-8 w-full max-w-3xl">
-            {isClient && history.length > 0 && (
-              <div className="hidden md:flex justify-end -mb-4">
-                  <Button variant="ghost" onClick={toggleSidebar}>
-                    <PanelLeft className="mr-2 h-4 w-4" />
-                    Toggle History
-                  </Button>
-              </div>
-            )}
-            <PromptForm
-              key={formKey}
-              onSubmit={handleOptimize}
-              isLoading={isLoading}
-              initialData={currentPrompt || undefined}
-            />
-            {isLoading && <LoadingSkeleton />}
-            {result && currentPrompt && (
-              <OutputDisplay
-                originalPrompt={currentPrompt.prompt}
-                targetLLM={currentPrompt.targetLLM}
-                result={result}
-                onFeedback={handleFeedback}
-              />
-            )}
-          </main>
-        </SidebarInset>
+        {isLoading && <LoadingSkeleton />}
+        {error && <p className="text-destructive">{error}</p>}
+        {result && currentPrompt && (
+          <OutputDisplay
+            originalPrompt={currentPrompt.prompt}
+            targetLLM={currentPrompt.targetLLM}
+            result={result}
+            onFeedback={handleFeedback}
+          />
+        )}
       </div>
     </div>
   );

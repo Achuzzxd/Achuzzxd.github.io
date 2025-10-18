@@ -8,7 +8,7 @@ export default function Loading() {
         <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
           <div className="flex items-center gap-2">
             <BotMessageSquare className="h-6 w-6 text-primary" />
-            <span className="font-bold text-lg">PromptForge AI</span>
+            <span className="font-bold text-lg">Prompt Engineer</span>
           </div>
           <div className="flex items-center gap-2">
             <Skeleton className="h-8 w-8 rounded-full" />

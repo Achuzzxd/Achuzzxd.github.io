@@ -59,9 +59,11 @@ export function PromptForm({ onSubmit, isLoading, initialData }: PromptFormProps
   });
 
   return (
-    <Card className="w-full shadow-lg">
+    <Card className="w-full shadow-2xl bg-card/80 backdrop-blur-sm border-border/20">
       <CardHeader>
-        <CardTitle className="font-headline text-2xl">Optimize Your Prompt</CardTitle>
+        <CardTitle className="font-headline text-2xl">
+          Optimize Your <span className="text-primary">Prompt</span>
+        </CardTitle>
         <CardDescription>
           Enter your prompt and select a target LLM to get an optimized version.
         </CardDescription>
@@ -113,7 +115,11 @@ export function PromptForm({ onSubmit, isLoading, initialData }: PromptFormProps
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full sm:w-auto shadow-lg bg-gradient-to-r from-primary to-teal-400 text-primary-foreground hover:from-primary/90 hover:to-teal-400/90 shadow-primary/20"
+            >
               {isLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
