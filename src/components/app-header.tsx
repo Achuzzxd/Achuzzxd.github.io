@@ -18,15 +18,18 @@ export function AppHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 max-w-screen-2xl items-center">
-        <div className="mr-4 hidden md:flex">
-          <Link href="/home" className="mr-6 flex items-center space-x-2">
+      <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
+        <div className="flex items-center">
+          <Link href="/home" className="flex items-center space-x-2">
             <Icons.logo className="h-6 w-6 text-primary" />
             <span className="hidden font-bold sm:inline-block">
               Prompt Engineer
             </span>
           </Link>
-          <nav className="flex items-center gap-4 text-sm lg:gap-6">
+        </div>
+        
+        <div className="hidden md:flex items-center gap-4">
+           <nav className="flex items-center gap-4 text-sm lg:gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -42,11 +45,10 @@ export function AppHeader() {
               </Link>
             ))}
           </nav>
-        </div>
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+          <div className="w-px h-6 bg-border/40" />
           <ThemeToggle />
         </div>
-      </div>
+
        <div className="md:hidden fixed bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50">
           <nav className="flex justify-around items-center h-16">
              {navLinks.map((link) => (
@@ -66,6 +68,7 @@ export function AppHeader() {
             ))}
           </nav>
         </div>
+      </div>
     </header>
   );
 }
