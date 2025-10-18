@@ -74,7 +74,7 @@ export function OutputDisplay({
 
   return (
     <div className="space-y-8">
-      <Card className="shadow-lg animate-in fade-in-50 slide-in-from-bottom-5 duration-500">
+      <Card className="shadow-2xl bg-card/80 backdrop-blur-sm border-border/20 animate-in fade-in-50 slide-in-from-bottom-5 duration-500">
         <CardHeader>
           <CardTitle className="font-headline text-2xl">Optimized Result</CardTitle>
           <CardDescription>
@@ -90,7 +90,7 @@ export function OutputDisplay({
                     Copy
                 </Button>
             </div>
-            <pre className="w-full rounded-md bg-muted p-4 font-code text-sm overflow-x-auto">
+            <pre className="w-full rounded-md bg-muted/50 p-4 font-code text-sm overflow-x-auto">
               <code>{result.optimized_prompt}</code>
             </pre>
           </div>
@@ -102,40 +102,40 @@ export function OutputDisplay({
                     Copy JSON
                 </Button>
             </div>
-            <pre className="w-full rounded-md bg-muted p-4 font-code text-sm overflow-x-auto">
+            <pre className="w-full rounded-md bg-muted/50 p-4 font-code text-sm overflow-x-auto">
               <code>{JSON.stringify(result, null, 2)}</code>
             </pre>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <Label>Target Model</Label>
-              <p className="mt-1 text-sm font-medium text-foreground bg-muted px-3 py-2 rounded-md">{result.target_model}</p>
+              <p className="mt-1 text-sm font-medium text-foreground bg-muted/50 px-3 py-2 rounded-md">{result.target_model}</p>
             </div>
             <div>
               <Label>Temperature</Label>
-              <p className="mt-1 text-sm font-medium text-foreground bg-muted px-3 py-2 rounded-md">{result.temperature}</p>
+              <p className="mt-1 text-sm font-medium text-foreground bg-muted/50 px-3 py-2 rounded-md">{result.temperature}</p>
             </div>
              <div>
               <Label>Max Tokens</Label>
-              <p className="mt-1 text-sm font-medium text-foreground bg-muted px-3 py-2 rounded-md">{result.max_output_tokens}</p>
+              <p className="mt-1 text-sm font-medium text-foreground bg-muted/50 px-3 py-2 rounded-md">{result.max_output_tokens}</p>
             </div>
           </div>
            <div>
             <Label className="text-sm font-semibold">Suggested Output</Label>
-            <p className="mt-2 text-sm text-muted-foreground p-4 bg-muted rounded-md">
+            <p className="mt-2 text-sm text-muted-foreground p-4 bg-muted/50 rounded-md">
               {result.suggested_output}
             </p>
           </div>
           <div>
             <Label className="text-sm font-semibold">Notes</Label>
-            <p className="mt-2 text-sm text-muted-foreground p-4 bg-muted rounded-md">
+            <p className="mt-2 text-sm text-muted-foreground p-4 bg-muted/50 rounded-md">
               {result.notes}
             </p>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="shadow-lg animate-in fade-in-50 slide-in-from-bottom-5 duration-700">
+      <Card className="shadow-2xl bg-card/80 backdrop-blur-sm border-border/20 animate-in fade-in-50 slide-in-from-bottom-5 duration-700">
         <CardHeader>
           <CardTitle>Provide Feedback</CardTitle>
           <CardDescription>
@@ -144,7 +144,7 @@ export function OutputDisplay({
         </CardHeader>
         {feedbackSubmitted ? (
           <CardContent>
-            <div className="flex flex-col items-center justify-center p-8 bg-muted rounded-lg">
+            <div className="flex flex-col items-center justify-center p-8 bg-muted/50 rounded-lg">
                 <ThumbsUp className="h-12 w-12 text-green-500 mb-4" />
                 <p className="text-lg font-medium">Thank you for your feedback!</p>
             </div>
@@ -196,7 +196,7 @@ export function OutputDisplay({
                   value={feedbackComments}
                   onChange={(e) => setFeedbackComments(e.target.value)}
                   disabled={isSubmitting}
-                  className="mt-2"
+                  className="mt-2 bg-transparent"
                 />
               </div>
             </CardContent>

@@ -59,7 +59,7 @@ export function PromptForm({ onSubmit, isLoading, initialData }: PromptFormProps
   });
 
   return (
-    <Card className="w-full shadow-lg">
+    <Card className="w-full shadow-2xl bg-card/80 backdrop-blur-sm border-border/20">
       <CardHeader>
         <CardTitle className="font-headline text-2xl">Optimize Your Prompt</CardTitle>
         <CardDescription>
@@ -78,7 +78,7 @@ export function PromptForm({ onSubmit, isLoading, initialData }: PromptFormProps
                   <FormControl>
                     <Textarea
                       placeholder="e.g., Write a short story about a robot who discovers music."
-                      className="resize-none h-32"
+                      className="resize-none h-32 bg-transparent"
                       {...field}
                     />
                   </FormControl>
@@ -97,7 +97,7 @@ export function PromptForm({ onSubmit, isLoading, initialData }: PromptFormProps
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-transparent">
                         <SelectValue placeholder="Select a model" />
                       </SelectTrigger>
                     </FormControl>
@@ -113,7 +113,7 @@ export function PromptForm({ onSubmit, isLoading, initialData }: PromptFormProps
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
+            <Button type="submit" disabled={isLoading} className="w-full sm:w-auto shadow-lg shadow-primary/20">
               {isLoading ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (

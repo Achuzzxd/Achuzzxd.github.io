@@ -5,19 +5,17 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Icons } from "@/components/icons";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
-type AppHeaderProps = {
-  hasHistory: boolean;
-};
-
-export function AppHeader({ hasHistory }: AppHeaderProps) {
+export function AppHeader() {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  const hasHistory = isClient && (localStorage.getItem('prompt-history')?.length ?? 0) > 2;
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/5 backdrop-blur-sm">
       <div className="container flex h-14 max-w-screen-2xl items-center justify-between">
         <div className="flex items-center gap-2">
           {isClient && hasHistory && <SidebarTrigger className="md:hidden" />}
