@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { OptimizePromptForLLMOutput } from "@/ai/flows/optimize-prompt-for-llm";
 import type { PromptHistoryItem, LlmModel } from "@/lib/types";
 import { useLocalStorage } from "@/lib/hooks/use-local-storage";
@@ -25,6 +26,11 @@ export function PromptForge() {
   const [history, setHistory] = useLocalStorage<PromptHistoryItem[]>("prompt-history", []);
   const { toast } = useToast();
   const { toggleSidebar } = useSidebar();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
 
   const handleOptimize = async (values: { prompt: string; targetLLM: LlmModel }) => {
@@ -114,7 +120,7 @@ export function PromptForge() {
         />
         <SidebarInset className="flex flex-col items-center p-4 md:p-8">
           <main className="flex flex-col gap-8 w-full max-w-3xl">
-            {history.length > 0 && (
+            {isClient && history.length > 0 && (
               <div className="hidden md:flex justify-end -mb-4">
                   <Button variant="ghost" onClick={toggleSidebar}>
                     <PanelLeft className="mr-2 h-4 w-4" />
