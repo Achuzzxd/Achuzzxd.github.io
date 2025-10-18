@@ -8,7 +8,7 @@ export default function HomePage() {
     <div className="flex flex-col items-center text-center gap-12 animate-in fade-in-50 duration-500">
       <div className="flex flex-col gap-4">
         <h1 className="text-4xl md:text-6xl font-bold font-headline tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary to-teal-400">
-          Welcome to PromptForge AI
+          Welcome to Prompt Engineer
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
           Your ultimate toolkit for crafting, optimizing, and managing high-performance prompts for any Large Language Model.
@@ -57,7 +57,7 @@ export default function HomePage() {
           </CardHeader>
           <CardContent>
             <CardDescription>
-              PromptForge is an AI-powered tool that helps you engineer better prompts by providing model-specific optimizations and suggestions.
+              Prompt Engineer is an AI-powered tool that helps you engineer better prompts by providing model-specific optimizations and suggestions.
             </CardDescription>
           </CardContent>
         </Card>

@@ -25,7 +25,7 @@ export function AppHeader() {
           <Link href="/home" className="mr-6 flex items-center space-x-2">
             <Icons.logo className="h-6 w-6 text-primary" />
             <span className="hidden font-bold sm:inline-block">
-              PromptForge AI
+              Prompt Engineer
             </span>
           </Link>
           <nav className="flex items-center gap-4 text-sm lg:gap-6">

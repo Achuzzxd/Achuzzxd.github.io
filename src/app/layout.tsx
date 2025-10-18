@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'PromptForge AI',
+  title: 'Prompt Engineer',
   description: 'Optimize your prompts for any LLM.',
 };
 
